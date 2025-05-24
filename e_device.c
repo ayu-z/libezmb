@@ -24,7 +24,7 @@ static void format_device_name(const char *input, char *output, size_t output_si
 }
 
 
-e_device_t *e_device_create(const char *uid, const char *south_url, const char *north_url, e_device_recv_cb cb) {
+e_device_t *e_common_create(const char *uid, const char *south_url, const char *north_url, e_device_recv_cb cb, e_device_type_t type) {
     if (!uid || !south_url || !north_url) {
         fprintf(stderr, "[ERROR] Invalid arguments to e_device_create\n");
         return NULL;
@@ -72,8 +72,12 @@ e_device_t *e_device_create(const char *uid, const char *south_url, const char *
     snprintf(topic_tmp, sizeof(topic_tmp), "%s_north_topic", uid);
     device->north_topic = strdup(topic_tmp);
 
-    zmq_setsockopt(device->south_sock, ZMQ_SUBSCRIBE, device->south_topic, strlen(device->south_topic));
-
+    if(type == E_DEVICE_TYPE_COLLECTOR) {
+        zmq_setsockopt(device->south_sock, ZMQ_SUBSCRIBE, device->south_topic, strlen(device->south_topic));
+    } else if(type == E_DEVICE_TYPE_MONITOR) {
+        zmq_setsockopt(device->south_sock, ZMQ_SUBSCRIBE, device->north_topic, strlen(device->north_topic));
+    }
+    device->type = type;
     device->uid = strdup(uid);
     device->south_url = strdup(south_url);
     device->north_url = strdup(north_url);
@@ -140,10 +144,14 @@ void e_device_listen(e_device_t *device) {
     pthread_detach(tid);
 }
 
-int e_device_send(e_device_t *device, const char *msg, size_t size) {
+int e_common_send(e_device_t *device, const char *msg, size_t size) {
     if (!device || !msg || size == 0) return -1;
     int rc = 0;
-    rc = zmq_send(device->north_sock, device->north_topic, strlen(device->north_topic), ZMQ_SNDMORE);
+    if(device->type == E_DEVICE_TYPE_COLLECTOR) {
+        rc = zmq_send(device->north_sock, device->north_topic, strlen(device->north_topic), ZMQ_SNDMORE);
+    } else if(device->type == E_DEVICE_TYPE_MONITOR) {
+        rc = zmq_send(device->north_sock, device->south_topic, strlen(device->south_topic), ZMQ_SNDMORE);
+    }
     if(rc < 0) return -1;
     rc = zmq_send(device->north_sock, msg, size, 0);
     if(rc < 0) return -1;

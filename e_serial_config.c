@@ -1,4 +1,4 @@
-#include "e_config.h"
+#include "e_serial_config.h"
 #include "e_queue.h"
 #include <json-c/json.h>
 #include <stdio.h>
@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <getopt.h>
 
-void e_config_print_usage(const char *prog) {
+void e_serial_config_usage(const char *prog) {
     fprintf(stderr, "Usage: %s [options]\n", prog);
     fprintf(stderr, "  -u, --uid <uid>                 UID for this serial device\n");
     fprintf(stderr, "  -D, --device <dev>              Serial device (e.g., /dev/ttyUSB0)\n");
@@ -25,7 +25,7 @@ void e_config_print_usage(const char *prog) {
     fprintf(stderr, "  %s -C config.json\n", prog);
 }
 
-void e_config_print(const serial_config_t *config) {
+void e_serial_config_print(const serial_config_t *config) {
     printf("\nSerial Configuration:\n");
     printf("  UID           : %s\n", config->uid);
     printf("    Device        : %s\n", config->device);
@@ -38,7 +38,7 @@ void e_config_print(const serial_config_t *config) {
     printf("    Timeout (ms)  : %d\n\n", config->timeout_ms);
 }
 
-static void e_config_init(serial_config_t *config) {
+static void e_serial_config_init(serial_config_t *config) {
     config->uid = NULL;
     config->device = NULL;
     config->baudrate = DEFAULT_SERIAL_BAUDRATE;
@@ -50,7 +50,7 @@ static void e_config_init(serial_config_t *config) {
     config->timeout_ms = DEFAULT_SERIAL_REV_TIMEOUT;
 }
 
-static serial_config_t* e_config_copy(const serial_config_t *src) {
+static serial_config_t* e_serial_config_copy(const serial_config_t *src) {
     serial_config_t *dst = malloc(sizeof(serial_config_t));
     if (!dst) return NULL;
 
@@ -67,7 +67,7 @@ static serial_config_t* e_config_copy(const serial_config_t *src) {
     return dst;
 }
 
-static void e_config_free(serial_config_t *config) {
+static void e_serial_config_free(serial_config_t *config) {
     if (config) {
         free(config->uid);
         free(config->device);
@@ -75,7 +75,7 @@ static void e_config_free(serial_config_t *config) {
     }
 }
 
-static int e_config_load_json(const char *filename, e_queue_t *queue) {
+static int e_serial_config_load_json(const char *filename, e_queue_t *queue) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         perror("Failed to open config file");
@@ -117,7 +117,7 @@ static int e_config_load_json(const char *filename, e_queue_t *queue) {
         serial_config_t *config = malloc(sizeof(serial_config_t));
         if (!config) continue;
 
-        e_config_init(config);
+        e_serial_config_init(config);
 
         struct json_object *j_uid, *j_device, *j_baud, *j_databits;
         struct json_object *j_stopbits, *j_parity, *j_mindelay;
@@ -153,7 +153,7 @@ static int e_config_load_json(const char *filename, e_queue_t *queue) {
             config->timeout_ms = json_object_get_int(j_timeout);
 
         if (!config->device) {
-            e_config_free(config);
+            e_serial_config_free(config);
             continue;
         }
 
@@ -164,10 +164,10 @@ static int e_config_load_json(const char *filename, e_queue_t *queue) {
     return 0;
 }
 
-int e_config_parse_args(int argc, char **argv, e_queue_t *queue) {
+int e_serial_config_parse(int argc, char **argv, e_queue_t *queue) {
     char *config_file = NULL;
     serial_config_t config;
-    e_config_init(&config);
+    e_serial_config_init(&config);
 
     static struct option long_options[] = {
         {"uid", required_argument, 0, 'u'},
@@ -245,7 +245,7 @@ int e_config_parse_args(int argc, char **argv, e_queue_t *queue) {
                 config_file = strdup(optarg);   
                 break;
             case 'h':
-                e_config_print_usage(argv[0]);
+                e_serial_config_usage(argv[0]);
                 exit(EXIT_SUCCESS);
             default:
                 return -1;
@@ -253,18 +253,18 @@ int e_config_parse_args(int argc, char **argv, e_queue_t *queue) {
     }
 
     if (config_file) {
-        if (e_config_load_json(config_file, queue) != 0) {
+        if (e_serial_config_load_json(config_file, queue) != 0) {
             fprintf(stderr, "Failed to load config file\n");
             return -1;
         }
     } 
     else if (config.device && config.uid) {
-        serial_config_t *cfg_copy = e_config_copy(&config);
+        serial_config_t *cfg_copy = e_serial_config_copy(&config);
         if (cfg_copy) {
             e_queue_push(queue, cfg_copy);
         }
     } else {
-        e_config_print_usage(argv[0]);
+        e_serial_config_usage(argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -272,9 +272,9 @@ int e_config_parse_args(int argc, char **argv, e_queue_t *queue) {
 }
 
 #if 0
-int e_config_load_json_callback(void *arg, void *data) {
+int e_serial_config_load_json_callback(void *arg, void *data) {
     serial_config_t *config = (serial_config_t *)data;
-    e_config_print(config);
+    e_serial_config_print(config);
     return 0;
 }
 
@@ -284,7 +284,7 @@ int main(int argc, char **argv) {
     
     char *config_file = NULL;
     
-    if (parse_args(argc, argv, &port_queue) != 0) {
+    if (e_serial_config_parse(argc, argv, &port_queue) != 0) {
         fprintf(stderr, "Parameter parsing failed\n");
         e_queue_clear(&port_queue);
         free(config_file);
@@ -292,7 +292,7 @@ int main(int argc, char **argv) {
     }
 
     printf("\nLoaded %d port configurations:\n", e_queue_size(&port_queue));
-    e_queue_foreach(&port_queue, NULL, e_config_load_json_callback);
+    e_queue_foreach(&port_queue, NULL, e_serial_config_load_json_callback);
 
     e_queue_clear(&port_queue);
     free(config_file);

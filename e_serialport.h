@@ -1,7 +1,7 @@
 #ifndef E_SERIALPORT_H
 #define E_SERIALPORT_H
 
-#include "e_config.h"
+#include "e_serial_config.h"
 
 /* 串口接收回调函数类型 */
 typedef void (*serial_recv_callback_t)(void *ctx, const char *data, size_t len);

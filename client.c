@@ -20,7 +20,7 @@ void *device_listen_thread(void *arg) {
 }
 
 int main() {
-    e_device_t *device = e_device_create("demo", EZMB_DEFAULT_SOUTH_URL, EZMB_DEFAULT_NORTH_URL, on_client_recv);
+    e_device_t *device = e_collector_create("demo", EZMB_DEFAULT_SOUTH_URL, EZMB_DEFAULT_NORTH_URL, on_client_recv);
 
     e_device_listen(device);
 
@@ -30,7 +30,7 @@ int main() {
     while (1) {
         sprintf(msg, "Hello from client! %d", i++);
         printf("[SENDER] Sending message: %s\n", msg);
-        e_device_send(device, msg, strlen(msg));
+        e_collector_send(device, msg, strlen(msg));
         sleep(5);
     }
 

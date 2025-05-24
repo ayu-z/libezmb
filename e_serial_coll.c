@@ -49,7 +49,7 @@ static void recv_callback(void *ctx, const char *data, size_t len) {
 
     printf("[%s] Received %zu bytes:\n", port->ser.uid, len);
     hexdump(data, len);
-    printf("send to north topic: %s, rc = %d\n", device->north_topic, e_device_send(device, data, len));
+    printf("send to north topic: %s, rc = %d\n", device->north_topic, e_collector_send(device, data, len));
 }
 
 static void on_client_recv(const char *topic, size_t topic_len, const char *payload, size_t payload_len, void *data) {
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     e_queue_t port_queue;
     e_queue_init(&port_queue, 0);
 
-    if (e_config_parse_args(argc, argv, &port_queue) != 0) {
+    if (e_serial_config_parse(argc, argv, &port_queue) != 0) {
         fprintf(stderr, "Failed to parse arguments\n");
         exit(EXIT_FAILURE);
     }
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
 
     while (e_queue_size(&port_queue) > 0) {
         serial_config_t *config = (serial_config_t *)e_queue_pop(&port_queue);
-        e_device_t *device = e_device_create(config->uid, EZMB_DEFAULT_SOUTH_URL, EZMB_DEFAULT_NORTH_URL, on_client_recv);
+        e_device_t *device = e_collector_create(config->uid, EZMB_DEFAULT_SOUTH_URL, EZMB_DEFAULT_NORTH_URL, on_client_recv);
         
         if (e_serial_manager_add_port(g_manager, config, recv_callback, device) != 0) {
             fprintf(stderr, "Failed to add serial port %s\n", config->uid);

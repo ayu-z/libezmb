@@ -1,9 +1,10 @@
-#ifndef E_CONFIG_H
-#define E_CONFIG_H
+#ifndef E_SERIAL_CONFIG_H
+#define E_SERIAL_CONFIG_H
 
 #include <pthread.h>
 #include <signal.h>
 #include "e_queue.h"
+
 #define DEFAULT_BUF_MAX             1024
 #define DEFAULT_SERIAL_BAUDRATE     115200UL
 #define DEFAULT_SERIAL_REV_TIMEOUT  100
@@ -29,17 +30,17 @@ typedef struct {
  * @param config 串口配置
  * @return 0成功，-1失败
  */
-int e_config_parse_args(int argc, char **argv, e_queue_t *g_port_queue);
+int e_serial_config_parse(int argc, char **argv, e_queue_t *g_port_queue);
 
 /**
  * @brief 打印串口配置
  * @param config 串口配置
  */
-void e_config_print(const serial_config_t *config);
+void e_serial_config_print(const serial_config_t *config);
 
 /**
  * @brief 打印使用说明
  * @param prog 程序名
  */
-void e_config_print_usage(const char *prog);
-#endif // E_CONFIG_H
+void e_serial_config_usage(const char *prog);
+#endif // E_SERIAL_CONFIG_H
