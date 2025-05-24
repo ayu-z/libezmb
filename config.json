@@ -1,0 +1,20 @@
+{
+    "ports": [
+      {
+        "uid": "port0",
+        "device": "/tmp/virtual_serial1",
+        "baud": 115200
+      },
+      {
+        "uid": "port1",
+        "device": "/tmp/virtual_serial2",
+        "baud": 9600,
+        "databits": 8,
+        "stopbits": 1,
+        "parity": "N",
+        "mindelay": 100,
+        "maxlen": 512,
+        "timeout": 200
+    }
+    ]
+}
