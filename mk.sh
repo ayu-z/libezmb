@@ -11,3 +11,4 @@ gcc -o e_serial e_serial.c e_serialport.c e_serial_config.c e_serial_manager.c e
 # gcc -o e_config e_config.c e_queue.c -lpthread -ljson-c
 gcc -o e_serial_coll e_serial_coll.c  e_serialport.c e_serial_config.c e_serial_manager.c e_queue.c -lpthread -ljson-c -L . -lezmb 
 gcc -o monitor monitor.c -L . -lezmb
+ gcc -o app e_plugin_demo.c e_plugin_driver.c -llua5.1 -ldl -lm -I/usr/include/lua5.1 -I/usr/include/lua5.2 -I/usr/include/lua5.3 -I/usr/local/include/lua 
