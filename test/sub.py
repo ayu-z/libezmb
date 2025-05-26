@@ -1,11 +1,9 @@
-# sub.py
 import zmq
 
 context = zmq.Context()
 sub_socket = context.socket(zmq.SUB)
-sub_socket.connect("ipc:///tmp/ezmb_south.ipc")  # 连接到 proxy 的 XPUB 端
+sub_socket.connect("ipc:///tmp/ezmb_south.ipc")
 
-# 订阅多个主题
 sub_socket.setsockopt_string(zmq.SUBSCRIBE, "port0_north_topic")
 sub_socket.setsockopt_string(zmq.SUBSCRIBE, "port1_north_topic")
 

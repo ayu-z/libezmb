@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC  -Wall -Wextra -Werror -O2 -fPIC -shared  -o e_device.so CMakeFiles/e_device.dir/e_device_lua.c.o CMakeFiles/e_device.dir/e_device.c.o   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib: -lzmq -llua5.1 -lpthread 

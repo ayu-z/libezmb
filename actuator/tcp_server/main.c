@@ -32,7 +32,6 @@ typedef struct {
     size_t size;
 } message_queue_t;
 
-#define PORT 9995
 static void hexdump(const char *data, size_t len) {
     for (size_t i = 0; i < len; i++) {
         if (i % 8 == 0) {
@@ -154,7 +153,8 @@ static void *app_main_thread(void *arg) {
     }
     return NULL;
 }
-// 主函数
+
+
 int main(int argc, char **argv) {
     if (!e_tcp_server_config_parse(argc, argv, &g_config)) {
         return 1;
