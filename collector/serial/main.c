@@ -1,5 +1,5 @@
-#include "e_serial_manager.h"
-#include "ezmb.h"
+#include <ezmb/e_serial_manager.h>
+#include <ezmb/ezmb.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>

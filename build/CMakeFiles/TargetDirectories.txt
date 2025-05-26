@@ -1,0 +1,8 @@
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/ezmb.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/e_device.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/edit_cache.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/rebuild_cache.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/list_install_components.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/install.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/install/local.dir
+/home/ayu/Develop/Seriald_new/zmq/lib/build/CMakeFiles/install/strip.dir

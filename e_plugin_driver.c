@@ -261,7 +261,7 @@ void e_plugin_destroy(e_plugin_context_t *ctx) {
     free(ctx);
 }
 
-const e_plugin_driver_t *e_plugin_load_driver(e_plugin_context_t *ctx) {
+e_plugin_driver_t *e_plugin_load_driver(e_plugin_context_t *ctx) {
     if (!ctx) return NULL;
     return &ctx->driver;
 }

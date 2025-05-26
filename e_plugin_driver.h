@@ -6,6 +6,10 @@
 
 /**
  * @brief 插件类型
+ * 
+ * @param PLUGIN_NONE: 无类型
+ * @param PLUGIN_LUA: lua脚本
+ * @param PLUGIN_ELF: 动态链接库
  */
 typedef enum {
     PLUGIN_NONE,
@@ -84,7 +88,7 @@ e_plugin_context_t *e_plugin_load_from_elf(const char *filename);
  * @param ctx 插件上下文
  * @return 插件驱动
  */
-const e_plugin_driver_t *e_plugin_load_driver(e_plugin_context_t *ctx);
+e_plugin_driver_t *e_plugin_load_driver(e_plugin_context_t *ctx);
 
 /**
  * @brief 获取插件类型

@@ -92,7 +92,13 @@ static int e_serial_config_load_json(const char *filename, e_queue_t *queue) {
         return -1;
     }
 
-    fread(json_str, 1, len, fp);
+    int ret = fread(json_str, 1, len, fp);
+    if (ret != len) {
+        fprintf(stderr, "Failed to read config file\n");
+        fclose(fp);
+        free(json_str);
+        return -1;
+    }
     json_str[len] = '\0';
     fclose(fp);
 

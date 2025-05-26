@@ -54,7 +54,7 @@ static void *lua_listen_thread(void *arg) {
                 lua_pushlstring(ud->L, (const char *)zmq_msg_data(&topic_msg), zmq_msg_size(&topic_msg));
                 lua_pushlstring(ud->L, (const char *)zmq_msg_data(&data_msg), zmq_msg_size(&data_msg));
                 if (lua_pcall(ud->L, 2, 0, 0) != 0) {
-                    fprintf(stderr, "[%s] LUA callback error: %s\n", type_str, lua_tostring(ud->L, -1));
+                    // fprintf(stderr, "[%s] LUA callback error: %s\n", type_str, lua_tostring(ud->L, -1));
                     lua_pop(ud->L, 1);
                 }
             }

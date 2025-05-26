@@ -123,6 +123,7 @@ void *e_proxy_listen_thread(void *arg) {
     }
 
     printf("[INFO] Proxy stopped\n");
+    return NULL;
 }
 
 void e_proxy_listen(e_proxy_t *proxy) {

@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <ctype.h>
 
+#if 0
 static void format_device_name(const char *input, char *output, size_t output_size) {
     if (!input) return;
 
@@ -22,7 +23,7 @@ static void format_device_name(const char *input, char *output, size_t output_si
     }
     output[i] = '\0';
 }
-
+#endif
 
 e_device_t *e_common_create(const char *uid, const char *south_url, const char *north_url, e_device_recv_cb cb, e_device_type_t type) {
     if (!uid || !south_url || !north_url) {

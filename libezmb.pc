@@ -1,0 +1,12 @@
+sudo tee /usr/lib/pkgconfig/libezmb.pc > /dev/null <<EOF
+prefix=/usr
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: libezmb
+Description: EZMB Messaging Library
+Version: 1.0
+Libs: -L\${libdir} -lezmb
+Cflags: -I\${includedir}/ezmb
+EOF
